@@ -3,7 +3,7 @@
 # Jason Dixon <jason@dixongroup.net>
 
 SYNTHESIZE_HOME=$( cd "$( dirname "$0" )" && pwd )
-UBUNTU_RELEASE=`lsb_release -a 2>/dev/null | grep '^Descrip' | cut -s -f 2`
+UBUNTU_RELEASE=`cat /etc/*release | grep DISTRIB_RELEASE | grep -o -E '[0-9]+([.][0-9]+)?'`
 
 GRAPHITE_HOME='/opt/graphite'
 GRAPHITE_CONF="${GRAPHITE_HOME}/conf"
@@ -46,8 +46,8 @@ if [ -z $GRAPHITE_RELEASE ]; then
     GRAPHITE_RELEASE='1.0.2'
 fi
 
-if [[ ! $UBUNTU_RELEASE =~ 'Ubuntu 14.04' ]]; then
-  echo "Sorry, this is only supported for Ubuntu Linux 14.04."
+if [ $UBUNTU_RELEASE \< 14 ]; then
+  echo "Sorry, this is only supported for Ubuntu Linux  >= 14.04."
   exit 1
 fi
 if [[ -d $GRAPHITE_HOME ]]; then
